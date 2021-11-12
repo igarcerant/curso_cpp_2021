@@ -1,0 +1,27 @@
+CPU:=$(shell uname -m)
+TARGET:=$(shell basename `pwd`).$(CPU)
+SOURCES:=$(wildcard *.cpp)
+OBJECTS:=$(patsubst %.cpp,%.o,$(SOURCES))
+
+CFLAGS+= -Wall -O2 -I../security -I../bussiness_logic
+LFLAGS+= -L../security -lsecurity -L../bussiness_logic -lbussiness_logic
+
+CC=g++
+RM=rm -f
+
+.PHONY: all clean rebuild
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) -o $@ $(OBJECTS) $(LFLAGS)
+
+clean:
+	$(RM) $(OBJECTS)
+	$(RM) $(TARGET)
+
+rebuild: clean all
+
